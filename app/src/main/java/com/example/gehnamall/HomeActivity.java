@@ -29,7 +29,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -62,8 +65,8 @@ public class HomeActivity extends AppCompatActivity {
     private Bitmap capturedImageBitmap;
 
     private final String BACKEND_CATEGORY_URL = "http://3.110.34.172:8080/api/categories"; // Replace with your category API
-    private final String BACKEND_CARAT_URL = "http://3.110.34.172:8080/api/gifting"; // Replace with your carat API
-    private final String BACKEND_SUBMIT_URL = "http://192.168.148.25:9191/admin/upload/Products?category=4001&subCategory=6001&"; // Replace with your submit API
+    private final String BACKEND_CARAT_URL = "http://3.110.34.172:8080/api/prices"; // Replace with your carat API
+    private final String BACKEND_SUBMIT_URL = "http://3.110.34.172:8080/admin/upload/Products?category=4001&subCategory=6001&"; // Replace with your submit API
 //http://3.110.34.172:8080/api/gifting
     //http://3.110.34.172:8080/api/occasion
     private final String BACKEND_GIFTING_URL = "http://3.110.34.172:8080/api/gifting";
@@ -219,18 +222,35 @@ public class HomeActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     try {
                         JSONArray jsonArray = new JSONArray(response.body().string());
-                        List<String> items = new ArrayList<>();
+                        Set<String> karatSet = new HashSet<>();  // Use a Set to store unique karat values
+
+                        // Iterate over the JSON array and extract keys containing 'K'
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            items.add(jsonArray.getJSONObject(i).getString("giftingName"));
+                            JSONObject metalData = jsonArray.getJSONObject(i);
+
+                            // Iterate through the keys of the JSONObject
+                            Iterator<String> keys = metalData.keys();
+                            while (keys.hasNext()) {
+                                String key = keys.next();
+                                if (key.endsWith("K:")) {  // Check if the key ends with 'K:'
+                                    karatSet.add(key.replace(":", ""));  // Remove the ':' and add the karat value (like '14K')
+                                }
+                            }
                         }
+
+                        // Convert the set to a list and update the spinner
+                        List<String> karatItems = new ArrayList<>(karatSet);
                         runOnUiThread(() -> {
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(HomeActivity.this, android.R.layout.simple_spinner_item, items);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(HomeActivity.this, android.R.layout.simple_spinner_item, karatItems);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             dropdown.setAdapter(adapter);
                         });
                     } catch (Exception e) {
                         runOnUiThread(() -> Toast.makeText(HomeActivity.this, "Error parsing data", Toast.LENGTH_SHORT).show());
+                        e.printStackTrace();
                     }
+                } else {
+                    runOnUiThread(() -> Toast.makeText(HomeActivity.this, "Error fetching data", Toast.LENGTH_SHORT).show());
                 }
             }
         });
@@ -350,6 +370,8 @@ public class HomeActivity extends AppCompatActivity {
         String weight = weightInput.getText().toString().trim();
         String wattage = wattageInput.getText().toString().trim();
         String solmate = solmateInput.getText().toString().trim();
+        String categoryCode = category.replace(",", "").trim().replaceAll("[a-zA-Z]", "");
+        String subCategoryCode = subCategory.replace(",", "").trim().replaceAll("[a-zA-Z]", "");
 
         // Validate input fields
         if (weight.isEmpty() || wattage.isEmpty() || solmate.isEmpty() || gifting.isEmpty() || occasion.isEmpty()) {
@@ -364,10 +386,10 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
 
-//        if (capturedImages.size() < MIN_PHOTOS) {
-//            Toast.makeText(this, "Please capture at least " + MIN_PHOTOS + " photos", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        if (capturedImages.size() < MIN_PHOTOS) {
+            Toast.makeText(this, "Please capture at least " + MIN_PHOTOS + " photos", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         // Retrieve the token from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
@@ -381,7 +403,7 @@ public class HomeActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder multipartBuilder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("category", category)
+                .addFormDataPart("category", categoryCode)
                 .addFormDataPart("karat", carat)
                 .addFormDataPart("gifting", gifting)
                 .addFormDataPart("occasion", occasion)
@@ -390,7 +412,7 @@ public class HomeActivity extends AppCompatActivity {
                 .addFormDataPart("soulmate", solmate);
 
         if (category.equals("Gold") || category.equals("Diamond")) {
-            multipartBuilder.addFormDataPart("subCategory", subCategory);
+            multipartBuilder.addFormDataPart("subCategory", subCategoryCode);
         }
 
         // Add images to the multipart request

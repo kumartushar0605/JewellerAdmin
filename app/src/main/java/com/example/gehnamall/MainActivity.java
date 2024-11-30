@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText phoneInput, passwordInput;
     private Button signupButton;
-    private final String BACKEND_URL = "http://192.168.148.25:9191/auth/register"; // Replace with your API endpoint
+    private final String BACKEND_URL = "http://3.110.34.172:8080/auth/register"; // Replace with your API endpoint
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

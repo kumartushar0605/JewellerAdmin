@@ -4,25 +4,32 @@ import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import okhttp3.*;
 
@@ -30,25 +37,113 @@ public class HomeActivity2 extends AppCompatActivity {
     private static final int REQUEST_CODE_BANNER = 1;
     private static final int REQUEST_CODE_TESTIMONIAL = 2;
 
-    private LinearLayout dynamicContentLayout;
     private Uri bannerUri;
     private Uri testimonialUri;
-    private EditText inputPrice;
+
+    private Spinner dropdownMetal;
+    private Spinner dropdownKarat;
+
+    private HashMap<String, JSONObject> metalDataMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home2);
 
-        Button btnAddBanner = findViewById(R.id.btnAddBanner);
-        Button btnAddTestimonial = findViewById(R.id.btnAddTestimonial);
-        Button btnSubmit = findViewById(R.id.btnSubmit);
-        inputPrice = findViewById(R.id.inputPrice);
-        dynamicContentLayout = findViewById(R.id.dynamicContentLayout);
+        Button btnAddBannerImage = findViewById(R.id.btnAddBannerImage);
+        Button btnAddTestimonialImage = findViewById(R.id.btnAddTestimonialImage);
+        Button btnSubmitPrice = findViewById(R.id.btnSubmitPrice);
 
-        btnAddBanner.setOnClickListener(view -> openGallery(REQUEST_CODE_BANNER));
-        btnAddTestimonial.setOnClickListener(view -> openGallery(REQUEST_CODE_TESTIMONIAL));
-        btnSubmit.setOnClickListener(view -> submitData());
+        dropdownMetal = findViewById(R.id.dropdownPrice);
+        dropdownKarat = findViewById(R.id.dropdownKarat);
+
+        ImageView bannerImagePreview = findViewById(R.id.bannerImagePreview);
+        ImageView testimonialImagePreview = findViewById(R.id.testimonialImagePreview);
+
+        btnAddBannerImage.setOnClickListener(view -> openGallery(REQUEST_CODE_BANNER));
+        btnAddTestimonialImage.setOnClickListener(view -> openGallery(REQUEST_CODE_TESTIMONIAL));
+        btnSubmitPrice.setOnClickListener(view -> submitData(bannerImagePreview, testimonialImagePreview));
+
+        fetchPrices();
+        setupMetalDropdownListener();
+    }
+
+    private void fetchPrices() {
+        new Thread(() -> {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://3.110.34.172:8080/api/prices")
+                    .get()
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    JSONArray jsonArray = new JSONArray(responseBody);
+
+                    List<String> metalNames = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject metalData = jsonArray.getJSONObject(i);
+                        String metalName = metalData.getString("metalName");
+                        metalNames.add(metalName);
+                        metalDataMap.put(metalName, metalData);
+                    }
+
+                    runOnUiThread(() -> {
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, metalNames);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        dropdownMetal.setAdapter(adapter);
+                    });
+                } else {
+                    throw new IOException("Failed to fetch prices");
+                }
+            } catch (IOException | JSONException e) {
+                runOnUiThread(() -> Toast.makeText(this, "Error fetching prices: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                Log.e("FetchPrices", "Error", e);
+            }
+        }).start();
+    }
+
+    private void setupMetalDropdownListener() {
+        dropdownMetal.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                String selectedMetal = dropdownMetal.getSelectedItem().toString();
+                JSONObject metalData = metalDataMap.get(selectedMetal);
+
+                if (metalData != null) {
+                    dropdownKarat.setVisibility(View.VISIBLE); // Show dropdownKarat when a metal is selected
+                    List<String> karats = new ArrayList<>();
+                    try {
+                        // Get an iterator over the keys of the JSON object
+                        Iterator<String> keys = metalData.keys();
+
+                        // Iterate over the keys in the metalData JSON object
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            if (key.endsWith("K:")) {
+                                karats.add(key.replace(":", "")); // Remove ':' from the key
+                            }
+                        }
+
+                        // Set the adapter with the extracted karat values
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(HomeActivity2.this, android.R.layout.simple_spinner_item, karats);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        dropdownKarat.setAdapter(adapter);
+                    } catch (Exception e) {
+                        Log.e("DropdownListener", "Error parsing karats", e);
+                    }
+                } else {
+                    dropdownKarat.setVisibility(View.GONE); // Hide dropdownKarat if no valid metal is selected
+                }
+            }
+
+            @Override
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {
+                dropdownKarat.setVisibility(View.GONE); // Hide dropdownKarat when no metal is selected
+            }
+        });
     }
 
     private void openGallery(int requestCode) {
@@ -65,39 +160,22 @@ public class HomeActivity2 extends AppCompatActivity {
             if (selectedImageUri != null) {
                 if (requestCode == REQUEST_CODE_BANNER) {
                     bannerUri = selectedImageUri;
-                    addSection("Banner", bannerUri);
+                    showPreview(R.id.bannerImagePreview, bannerUri);
                 } else if (requestCode == REQUEST_CODE_TESTIMONIAL) {
                     testimonialUri = selectedImageUri;
-                    addSection("Testimonial", testimonialUri);
+                    showPreview(R.id.testimonialImagePreview, testimonialUri);
                 }
             }
         }
     }
 
-    private void addSection(String label, Uri imageUri) {
-        // Add a title for the section
-        TextView sectionTitle = new TextView(this);
-        sectionTitle.setText(label);
-        sectionTitle.setTextSize(18);
-        sectionTitle.setTextColor(Color.BLACK);
-        sectionTitle.setPadding(8, 8, 8, 4);
-
-        // Add the selected image
-        ImageView imageView = new ImageView(this);
+    private void showPreview(int imageViewId, Uri imageUri) {
+        ImageView imageView = findViewById(imageViewId);
         imageView.setImageURI(imageUri);
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                500 // Fixed height for uniformity
-        ));
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setPadding(0, 8, 0, 8);
-
-        // Add the title and image to the layout
-        dynamicContentLayout.addView(sectionTitle);
-        dynamicContentLayout.addView(imageView);
+        imageView.setVisibility(View.VISIBLE);
     }
 
-    private void submitData() {
+    private void submitData(ImageView bannerImagePreview, ImageView testimonialImagePreview) {
         SharedPreferences sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         String token = sharedPreferences.getString("authToken", null);
         if (token == null) {
@@ -105,9 +183,12 @@ public class HomeActivity2 extends AppCompatActivity {
             return;
         }
 
-        String price = inputPrice.getText().toString();
-        if (price.isEmpty() || bannerUri == null || testimonialUri == null) {
-            Toast.makeText(this, "Please select images and enter a price!", Toast.LENGTH_SHORT).show();
+        String selectedMetal = dropdownMetal.getSelectedItem() != null ? dropdownMetal.getSelectedItem().toString() : "";
+        String selectedKarat = dropdownKarat.getSelectedItem() != null ? dropdownKarat.getSelectedItem().toString() : "";
+        String enteredPrice = ((android.widget.EditText) findViewById(R.id.inputPrice)).getText().toString().trim();
+
+        if (selectedMetal.isEmpty() || selectedKarat.isEmpty() || enteredPrice.isEmpty() || bannerUri == null || testimonialUri == null) {
+            Toast.makeText(this, "Please complete all fields!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -116,13 +197,12 @@ public class HomeActivity2 extends AppCompatActivity {
                 OkHttpClient client = new OkHttpClient();
 
                 // Upload Banner
-                uploadImage(client, token, "http://192.168.148.25:9191/admin/upload/Banner", bannerUri);
-                // Update Price
-                updatePrice(client, token, "http://192.168.148.25:9191/admin/update/price", price);
+                uploadImage(client, token, "http://3.110.34.172:8080/admin/upload/Banner", bannerUri);
                 // Upload Testimonial
-                uploadImage(client, token, "http://192.168.148.25:9191/admin/upload/testimonial", testimonialUri);
+                uploadImage(client, token, "http://3.110.34.172:8080/admin/upload/testimonial", testimonialUri);
 
-
+                // Submit Price Data
+                submitPriceData(client, token, selectedMetal, selectedKarat, enteredPrice);
 
                 runOnUiThread(() -> Toast.makeText(this, "Data submitted successfully!", Toast.LENGTH_SHORT).show());
             } catch (IOException e) {
@@ -132,76 +212,69 @@ public class HomeActivity2 extends AppCompatActivity {
         }).start();
     }
 
-    private void uploadImage(OkHttpClient client, String token, String url, Uri imageUri) throws IOException {
-        File imageFile = createFileFromUri(imageUri);
-        if (imageFile == null || !imageFile.exists()) {
-            throw new IOException("Failed to resolve or create a valid file from URI: " + imageUri.toString());
+    private void submitPriceData(OkHttpClient client, String token, String metal, String karat, String price) throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("metalType", metal);
+            jsonObject.put("karat", karat);
+            jsonObject.put("price", price);
+        } catch (JSONException e) {
+            throw new IOException("Failed to create JSON payload", e);
         }
 
-        Log.d("UploadImage", "Uploading file: " + imageFile.getAbsolutePath());
-
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("images", imageFile.getName(), // Field name must be "images"
-                        RequestBody.create(imageFile, MediaType.parse("image/jpeg")))
-                .build();
+        RequestBody requestBody = RequestBody.create(
+                jsonObject.toString(),
+                MediaType.parse("application/json; charset=utf-8")
+        );
 
         Request request = new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .addHeader("Content-Type", "multipart/form-data")
-                .addHeader("Authorization", "Bearer " + token)
-                .build();
-
-        Response response = client.newCall(request).execute();
-        if (!response.isSuccessful()) {
-            String responseBody = response.body() != null ? response.body().string() : "No response body";
-            Log.e("UploadImage", "Upload failed: " + responseBody);
-            throw new IOException("Failed to upload image: " + responseBody);
-        }
-        Log.d("UploadImage", "Upload successful.");
-    }
-
-    private File createFileFromUri(Uri uri) throws IOException {
-        String fileName = "temp_image_" + System.currentTimeMillis() + ".jpg";
-        File tempFile = new File(getCacheDir(), fileName);
-
-        try (InputStream inputStream = getContentResolver().openInputStream(uri);
-             OutputStream outputStream = new FileOutputStream(tempFile)) {
-
-            if (inputStream == null) {
-                throw new IOException("InputStream is null for URI: " + uri.toString());
-            }
-
-            byte[] buffer = new byte[4096];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            throw new IOException("Error creating temp file from URI: " + uri.toString(), e);
-        }
-
-        return tempFile;
-    }
-
-    private void updatePrice(OkHttpClient client, String token, String url, String price) throws IOException {
-        RequestBody requestBody = new FormBody.Builder()
-                .add("price", price)
-                .build();
-
-        Request request = new Request.Builder()
-                .url(url)
+                .url("http://3.110.34.172:8080/admin/update/price")
                 .put(requestBody)
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
 
         Response response = client.newCall(request).execute();
         if (!response.isSuccessful()) {
-            String responseBody = response.body() != null ? response.body().string() : "No response body";
-            Log.e("UpdatePrice", "Failed to update price: " + responseBody);
-            throw new IOException("Failed to update price: " + responseBody);
+            throw new IOException("Failed to submit price data: " + response.body().string());
         }
-        Log.d("UpdatePrice", "Price update successful.");
+    }
+
+    private void uploadImage(OkHttpClient client, String token, String url, Uri imageUri) throws IOException {
+        File imageFile = createFileFromUri(imageUri);
+        if (imageFile == null || !imageFile.exists()) {
+            throw new IOException("Failed to resolve or create a valid file from URI: " + imageUri.toString());
+        }
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("images", imageFile.getName(),
+                        RequestBody.create(imageFile, MediaType.parse("image/jpeg")))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if (!response.isSuccessful()) {
+            throw new IOException("Failed to upload image: " + response.body().string());
+        }
+    }
+
+    private File createFileFromUri(Uri uri) throws IOException {
+        File tempFile = new File(getCacheDir(), "temp_image.jpg");
+
+        try (InputStream inputStream = getContentResolver().openInputStream(uri);
+             OutputStream outputStream = new FileOutputStream(tempFile)) {
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        }
+        return tempFile;
     }
 }
