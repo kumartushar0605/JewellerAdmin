@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileeFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Camera Icon -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/photosRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            />
+
+        <ImageView
+            android:id="@+id/cameraIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Camera"
+            android:src="@drawable/ic_camera"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <!-- EditTexts for Profile Details -->
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            android:inputType="textPersonName"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextShopName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Shop Name"
+            android:inputType="text"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextShopContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Shop Contact"
+            android:inputType="phone"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextShopAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Shop Address"
+            android:inputType="textPostalAddress"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextGSTIN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="GSTIN Number"
+            android:inputType="text"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextMOQ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Minimum Order Quantity"
+            android:inputType="number"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextReturnPolicy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Return Policy"
+            android:inputType="textMultiLine"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextOrderNumber1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Order Number 1"
+            android:inputType="number"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextOrderNumber2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Order Number 2"
+            android:inputType="number"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextOrderNumber3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Order Number 3"
+            android:inputType="number"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextBankName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Bank Name"
+            android:inputType="text"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextBankAccountNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Bank Account Number"
+            android:inputType="number"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextIFSCCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="IFSC Code"
+            android:inputType="text"
+            android:layout_marginTop="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextUPIID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="UPI ID"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Logout Button -->
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:layout_marginTop="8dp"/>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

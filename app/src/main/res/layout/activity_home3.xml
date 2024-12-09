@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/FrameLayoutuserhome"
-        android:layout_above="@id/bottomnevigatiomuserhome"
+        android:layout_above="@id/bottomnevigatiomuserhome3"
         />
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:id="@+id/bottomnevigatiomuserhome"
+        android:id="@+id/bottomnevigatiomuserhome3"
         app:menu="@menu/bottom_menu"
         android:layout_alignParentBottom="true"
         app:itemRippleColor="#C85D5D"

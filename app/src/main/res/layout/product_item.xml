@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    android:layout_marginBottom="8dp">
+
+    <!-- Horizontal RecyclerView for images -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewProductImages"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp" />
+
+    <!-- TextView for product details -->
+    <TextView
+        android:id="@+id/textProductDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Product Details"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Button for deleting the product -->
+    <Button
+        android:id="@+id/btnDeleteProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Product"
+        android:backgroundTint="@color/design_default_color_error"
+        android:textColor="@android:color/white" />
+</LinearLayout>

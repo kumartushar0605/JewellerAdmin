@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeFragment">
+
+<!--    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
+<!--    <?xml version="1.0" encoding="utf-8"?>-->
+<!--    <androidx.core.widget.NestedScrollView-->
+
+<!--        xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--        xmlns:tools="http://schemas.android.com/tools"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:padding="16dp"-->
+<!--        >-->
+
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
+
+<!--            <Button-->
+<!--                android:id="@+id/manageContent"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginEnd="221dp"-->
+<!--                android:text="Manage Content"-->
+<!--                app:layout_constraintBottom_toTopOf="@+id/categoryLabel"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.0"-->
+<!--                app:layout_constraintVertical_bias="0.4" />-->
+
+<!--            &lt;!&ndash; Category Label &ndash;&gt;-->
+
+<!--            <Button-->
+<!--                android:id="@+id/yrpr"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="200dp"-->
+<!--                android:text="Your Products"-->
+<!--                app:layout_constraintBottom_toTopOf="@+id/categoryLabel"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintVertical_bias="0.375" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/categoryLabel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="64dp"-->
+<!--                android:text="Category"-->
+<!--                android:textColor="#000"-->
+<!--                android:textSize="16sp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            &lt;!&ndash; Category Dropdown &ndash;&gt;-->
+<!--            <Spinner-->
+<!--                android:id="@+id/categoryDropdown"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/categoryLabel" />-->
+
+<!--            &lt;!&ndash; Gender Selection &ndash;&gt;-->
+<!--            <RadioGroup-->
+<!--                android:id="@+id/genderRadioGroup"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/categoryDropdown">-->
+
+<!--                <RadioButton-->
+<!--                    android:id="@+id/maleRadioButton"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Male" />-->
+
+<!--                <RadioButton-->
+<!--                    android:id="@+id/femaleRadioButton"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Female" />-->
+<!--            </RadioGroup>-->
+
+<!--            &lt;!&ndash; Subcategory Label &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:id="@+id/subcategoryLabel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:text="Subcategory"-->
+<!--                android:textColor="#000"-->
+<!--                android:textSize="16sp"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/genderRadioGroup" />-->
+
+<!--            &lt;!&ndash; Subcategory Dropdown &ndash;&gt;-->
+<!--            <Spinner-->
+<!--                android:id="@+id/subcategoryDropdown"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:visibility="gone"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/subcategoryLabel" />-->
+
+<!--            &lt;!&ndash; Carat Label &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:id="@+id/caratLabel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:text="Karat"-->
+<!--                android:textColor="#000"-->
+<!--                android:textSize="16sp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/subcategoryDropdown" />-->
+
+<!--            &lt;!&ndash; Carat Dropdown &ndash;&gt;-->
+<!--            <Spinner-->
+<!--                android:id="@+id/caratDropdown"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/caratLabel" />-->
+
+<!--            &lt;!&ndash; Weight Input &ndash;&gt;-->
+<!--            <EditText-->
+<!--                android:id="@+id/weightInput"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:hint="Weight"-->
+<!--                android:inputType="numberDecimal"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/caratDropdown" />-->
+
+<!--            &lt;!&ndash; Wattage Input &ndash;&gt;-->
+<!--            <EditText-->
+<!--                android:id="@+id/wattageInput"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:hint="Wastage"-->
+<!--                android:inputType="numberDecimal"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/weightInput" />-->
+
+
+
+<!--            &lt;!&ndash; Soulmate Label &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:id="@+id/soulmateLabel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:text="Soulmate"-->
+<!--                android:textColor="#000"-->
+<!--                android:textSize="16sp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/wattageInput" />-->
+
+<!--            &lt;!&ndash; Soulmate Dropdown &ndash;&gt;-->
+<!--            <Spinner-->
+<!--                android:id="@+id/soulmateDropdown"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/soulmateLabel" />-->
+
+<!--            &lt;!&ndash; Gifting Label &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:id="@+id/giftingLabel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:text="Gifting"-->
+<!--                android:textColor="#000"-->
+<!--                android:textSize="16sp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/soulmateDropdown" />-->
+
+<!--            &lt;!&ndash; Gifting Dropdown &ndash;&gt;-->
+<!--            <Spinner-->
+<!--                android:id="@+id/giftingDropdown"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/giftingLabel" />-->
+
+<!--            &lt;!&ndash; Occasion Label &ndash;&gt;-->
+<!--            <TextView-->
+<!--                android:id="@+id/occasionLabel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:text="Occasion"-->
+<!--                android:textColor="#000"-->
+<!--                android:textSize="16sp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/giftingDropdown" />-->
+
+<!--            &lt;!&ndash; Occasion Dropdown &ndash;&gt;-->
+<!--            <Spinner-->
+<!--                android:id="@+id/occasionDropdown"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/occasionLabel" />-->
+
+<!--            &lt;!&ndash; RecyclerView &ndash;&gt;-->
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/photosRecyclerView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/occasionDropdown" />-->
+
+<!--            &lt;!&ndash; Camera Icon &ndash;&gt;-->
+<!--            <ImageView-->
+<!--                android:id="@+id/cameraIcon"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:layout_marginBottom="16dp"-->
+<!--                android:contentDescription="Camera"-->
+<!--                android:src="@drawable/ic_camera"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/photosRecyclerView"-->
+<!--                app:layout_constraintBottom_toTopOf="@id/submitButton" />-->
+
+<!--            &lt;!&ndash; Submit Button &ndash;&gt;-->
+<!--            <Button-->
+<!--                android:id="@+id/submitButton"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="24dp"-->
+<!--                android:text="Submit"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/cameraIcon" />-->
+
+
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--    </androidx.core.widget.NestedScrollView>-->
+
+
+</FrameLayout>

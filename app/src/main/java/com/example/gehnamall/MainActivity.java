@@ -28,7 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText phoneInput, passwordInput;
     private Button signupButton;
-    private final String BACKEND_URL = "http://3.110.34.172:8080/auth/register"; // Replace with your API endpoint
+    String token;
+    String identity;
+    private final String BACKEND_URL = "http://3.110.34.172:8080/auth/login"; // Replace with your API endpoint
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,25 +42,28 @@ public class MainActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.passwordInput);
         signupButton = findViewById(R.id.signupButton);
 
+
+
+
         // Set button click listener
         signupButton.setOnClickListener(v -> {
-            String phone = phoneInput.getText().toString().trim();
+            String email = phoneInput.getText().toString().trim();
             String password = passwordInput.getText().toString().trim();
 
-            if (phone.isEmpty() || password.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             } else {
-                sendSignupData(phone, password);
+                sendSignupData(email, password);
             }
         });
     }
 
-    private void sendSignupData(String phone, String password) {
+    private void sendSignupData(String email, String password) {
         OkHttpClient client = new OkHttpClient();
 
         // Create JSON payload
         String jsonPayload = "{"
-                + "\"phoneNumber\":\"" + phone + "\","
+                + "\"email\":\"" + email + "\","
                 + "\"password\":\"" + password + "\""
                 + "}";
 
@@ -93,20 +98,34 @@ public class MainActivity extends AppCompatActivity {
 
                         String message = jsonObject.getString("message");
                         int status = jsonObject.getInt("status");
-                        String token = jsonObject.getString("token");
+                        token = jsonObject.getString("token");
+                       identity = jsonObject.getString("identity");
 
                         // Store the token in SharedPreferences
                         SharedPreferences sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("authToken", token);
+                        editor.putString("identity",identity);
                         editor.apply();
 
                         runOnUiThread(() -> {
                             Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                             // Start HomeActivity
-                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                            startActivity(intent);
-                            finish(); // Optional: Close the current activity
+
+                               if(identity.equals("BANSAL")){
+                                   Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                                   startActivity(intent);
+                                   finish(); // Optional: Close the current activity
+                                   return;
+                               } else if(identity.equals("SLGOLD"))
+                               {
+                                   Intent intent = new Intent(MainActivity.this, HomeActivity2.class);
+                                   startActivity(intent);
+                                   finish();
+
+                               }
+
+
                         });
                     } catch (Exception e) {
                         runOnUiThread(() -> {

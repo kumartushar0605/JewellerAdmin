@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/upload_products"
+        android:icon="@drawable/ic_baseline_upload_24"
+        android:title="Upload" />
+
+    <item
+        android:id="@+id/menu_manage_content"
+        android:icon="@drawable/ic_baseline_menu_book_24"
+        android:title="Manage Content" />
+    <item
+        android:id="@+id/menu_products"
+        android:icon="@drawable/ic_baseline_add_shopping_cart_24"
+        android:title="Products" />
+    <item
+        android:id="@+id/menu_profile"
+        android:icon="@drawable/ic_baseline_man_24"
+        android:title="Profile" />
+
+</menu>
